@@ -129,6 +129,7 @@ parse_default_version_in_control_file(const char *extname,
  *
  *  ${extwlist_custom_path}/${extname}/${when}--${version}.sql
  *  ${extwlist_custom_path}/${extname}/${when}-${action}.sql
+ *  ${extwlist_custom_path}/${when}-${action}.sql
  *
  * - action is expected to be either "create" or "update"
  * - when   is expected to be either "before" or "after"
@@ -148,6 +149,22 @@ get_generic_custom_script_filename(const char *name,
 			 extwlist_custom_path, name, when, action);
 
 	return result;
+}
+
+
+char *
+get_catchall_custom_script_filename(const char *action, const char * when)
+{
+    char	   *result;
+
+    if (extwlist_custom_path == NULL)
+        return NULL;
+
+    result = (char *) palloc(MAXPGPATH);
+    snprintf(result, MAXPGPATH, "%s/%s-%s.sql",
+             extwlist_custom_path, when, action);
+
+    return result;
 }
 
 char *
