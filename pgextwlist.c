@@ -248,14 +248,21 @@ call_extension_scripts(const char *extname,
 	char *generic_custom_script =
 		get_generic_custom_script_filename(extname, action, when);
 
+    char *catchall_custom_script=
+            get_catchall_custom_script_filename(action, when);
+
 	elog(DEBUG1, "Considering custom script \"%s\"", specific_custom_script);
 	elog(DEBUG1, "Considering custom script \"%s\"", generic_custom_script);
+    elog(DEBUG1, "Considering custom script \"%s\"", catchall_custom_script);
 
 	if (access(specific_custom_script, F_OK) == 0)
 		execute_custom_script(specific_custom_script, schema);
 
 	else if (access(generic_custom_script, F_OK) == 0)
 		execute_custom_script(generic_custom_script, schema);
+
+    else if (access(catchall_custom_script, F_OK) == 0)
+        execute_custom_script(catchall_custom_script, schema);
 }
 
 static bool
